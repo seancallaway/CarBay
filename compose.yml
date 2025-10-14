@@ -1,0 +1,16 @@
+services:
+
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    volumes:
+      - psql_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=b3pFUXqvMMx2JS8qLdrt
+      - POSTGRES_USER=auction
+      - POSTGRES_DB=auction
+
+volumes:
+  psql_data:
