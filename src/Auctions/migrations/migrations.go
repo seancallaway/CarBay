@@ -126,6 +126,20 @@ func seedData() {
 			},
 		},
 		{
+			ID:         uuid.MustParse("6a5011a1-fe1f-47df-9a32-b5346b289391"),
+			Status:     models.Live,
+			Seller:     "bob",
+			AuctionEnd: time.Now().Add(19 * 24 * time.Hour),
+			Item: models.Item{
+				Make:     "Audi",
+				Model:    "R8",
+				Color:    "White",
+				Mileage:  10050,
+				Year:     2021,
+				ImageUrl: "https://cdn.pixabay.com/photo/2019/12/26/20/50/audi-r8-4721217_960_720.jpg",
+			},
+		},
+		{
 			ID:           uuid.MustParse("40490065-dac7-46b6-acc4-df507e0d6570"),
 			Status:       models.Live,
 			ReservePrice: 20000,
