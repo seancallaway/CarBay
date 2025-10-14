@@ -15,12 +15,12 @@ const (
 )
 
 type Auction struct {
-	ID             uuid.UUID `json:"id" gorm:"type:uuid;default:gen_random_uuid()"`
-	ReservePrice   int       `gorm:"default:0"`
-	Seller         string    `gorm:"not null"`
-	Winner         string
-	SoldAmount     int
-	CurrentHighBid int
+	ID             uuid.UUID     `json:"id" gorm:"type:uuid;default:gen_random_uuid()"`
+	ReservePrice   int           `gorm:"default:0"`
+	Seller         string        `gorm:"not null"`
+	Winner         *string       `gorm:"default:null"`
+	SoldAmount     int           `gorm:"default:null"`
+	CurrentHighBid int           `gorm:"default:null"`
 	CreatedAt      time.Time     `gorm:"autoCreateTime"`
 	UpdatedAt      time.Time     `gorm:"autoUpdateTime"`
 	AuctionEnd     time.Time     `gorm:"not null"`
