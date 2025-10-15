@@ -15,6 +15,9 @@ var DB *gorm.DB
 func ConnectDatabase() {
 	dbUser := utils.Getenv("SQL_USER", "auction")
 	dbPass := os.Getenv("SQL_PASSWORD")
+	if dbPass == "" {
+		panic("SQL password not set.")
+	}
 	dbHost := utils.Getenv("SQL_HOST", "db")
 	dbPort := utils.Getenv("SQL_PORT", "5432")
 	dbName := utils.Getenv("SQL_NAME", "auction")
