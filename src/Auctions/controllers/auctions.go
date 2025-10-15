@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"errors"
-	"log/slog"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -28,7 +27,6 @@ func GetAuctions(ctx *gin.Context) {
 
 func GetAuctionById(ctx *gin.Context) {
 	rawId := ctx.Param("id")
-	slog.Info("==> " + rawId)
 	id, err := uuid.Parse(rawId)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid UUID"})
@@ -37,7 +35,6 @@ func GetAuctionById(ctx *gin.Context) {
 
 	var auction models.Auction
 	result := inits.DB.Preload("Item").First(&auction, id)
-	slog.Info("==>" + auction.ID.String())
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": "Not Found"})
