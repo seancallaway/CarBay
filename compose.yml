@@ -12,5 +12,16 @@ services:
       - POSTGRES_USER=auction
       - POSTGRES_DB=auction
 
+  auction:
+    build: src/Auctions
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:7001:7001"
+    environment:
+      - SQL_PASSWORD=b3pFUXqvMMx2JS8qLdrt
+      - PORT=7001
+      - DEBUG=1
+    
+
 volumes:
   psql_data:

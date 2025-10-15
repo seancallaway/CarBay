@@ -1,15 +1,22 @@
 package main
 
 import (
+	"log/slog"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 
 	"github.com/seancallaway/CarBay/auction/controllers"
 	"github.com/seancallaway/CarBay/auction/inits"
+	"github.com/seancallaway/CarBay/auction/internal/utils"
 )
 
 func main() {
+	if utils.Getenv("DEBUG", "0") == "0" {
+		slog.Info("Running in production mode.")
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	r := gin.Default()
 
 	inits.ConnectDatabase()
@@ -20,5 +27,5 @@ func main() {
 
 	r.GET("/api/auctions", controllers.GetAuctions)
 
-	r.Run("127.0.0.1:7001")
+	r.Run()
 }
