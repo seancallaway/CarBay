@@ -10,9 +10,9 @@ import (
 
 type AuctionDTO struct {
 	ID             uuid.UUID `json:"id"`
-	CreatedAt      time.Time `json:"created_at"`
-	UpdatedAt      time.Time `json:"updated_at"`
-	AuctionEnd     time.Time `json:"auction_end"`
+	CreatedAt      time.Time `json:"createdAt"`
+	UpdatedAt      time.Time `json:"updatedAt"`
+	AuctionEnd     time.Time `json:"auctionEnd"`
 	Seller         string    `json:"seller"`
 	Winner         *string   `json:"winner"`
 	Make           string    `json:"make"`
@@ -20,11 +20,22 @@ type AuctionDTO struct {
 	Year           int       `json:"year"`
 	Color          string    `json:"color"`
 	Mileage        int       `json:"mileage"`
-	ImageUrl       string    `json:"image_url"`
+	ImageUrl       string    `json:"imageUrl"`
 	Status         string    `json:"status"`
-	ReservePrice   int       `json:"reserve_price"`
-	SoldAmount     int       `json:"sold_amount"`
-	CurrentHighBid int       `json:"current_high_bid"`
+	ReservePrice   int       `json:"reservePrice"`
+	SoldAmount     int       `json:"soldAmount"`
+	CurrentHighBid int       `json:"currentHighBid"`
+}
+
+type CreateAuctionDTO struct {
+	Make         string `json:"make"`
+	Model        string `json:"model"`
+	Color        string `json:"color"`
+	Mileage      int    `json:"mileage,string"`
+	Year         int    `json:"year,string"`
+	ReservePrice int    `json:"reservePrice"`
+	ImageUrl     string `json:"imageUrl"`
+	AuctionEnd   string `json:"auctionEnd"`
 }
 
 func ToAuctionDTO(auction *models.Auction) AuctionDTO {
@@ -67,4 +78,8 @@ func ToAuctionDTOs(auctions []models.Auction) []AuctionDTO {
 		auctionDTOs = append(auctionDTOs, ToAuctionDTO(&auction))
 	}
 	return auctionDTOs
+}
+
+func (dto CreateAuctionDTO) EndDate() (time.Time, error) {
+	return time.Parse(time.RFC3339, dto.AuctionEnd)
 }

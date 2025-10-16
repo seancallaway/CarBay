@@ -26,6 +26,7 @@ func main() {
 	})
 
 	r.GET("/api/auctions", controllers.GetAuctions)
+	r.POST("/api/auctions", controllers.CreateAuction)
 	r.GET("/api/auctions/:id", controllers.GetAuctionById)
 
 	r.Run()

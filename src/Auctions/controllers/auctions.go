@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"errors"
+	"log/slog"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -45,4 +46,52 @@ func GetAuctionById(ctx *gin.Context) {
 		auctionDTO := dtos.ToAuctionDTO(&auction)
 		ctx.JSON(http.StatusOK, gin.H{"data": auctionDTO})
 	}
+}
+
+func CreateAuction(ctx *gin.Context) {
+	/* TODO:
+	Implement authentication on this route.
+	*/
+
+	var data dtos.CreateAuctionDTO
+
+	if err := ctx.BindJSON(&data); err != nil {
+		slog.Error(err.Error())
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Body"})
+		return
+	}
+
+	endDate, err := data.EndDate()
+	if err != nil {
+		// TODO: Don't show the raw error when DEBUG=0
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid End Date", "details": err.Error()})
+		return
+	}
+
+	// TODO: Add current user as seller.
+	seller := "test"
+
+	auction := models.Auction{
+		Item: models.Item{
+			Make:     data.Make,
+			Model:    data.Model,
+			Color:    data.Color,
+			Year:     data.Year,
+			Mileage:  data.Mileage,
+			ImageUrl: data.ImageUrl,
+		},
+		Seller:     seller,
+		Status:     models.Live,
+		AuctionEnd: endDate,
+	}
+
+	result := inits.DB.Create(&auction)
+	if result.Error != nil {
+		// TODO: Dig into the error types and do some better error handling.
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Unable To Create Auction", "details": result.Error.Error()})
+		return
+	}
+	slog.Debug("Auction created.", "user", seller, "auctionId", auction.ID.String())
+	auctionDTO := dtos.ToAuctionDTO(&auction)
+	ctx.JSON(http.StatusCreated, gin.H{"data": auctionDTO})
 }
