@@ -38,6 +38,14 @@ type CreateAuctionDTO struct {
 	AuctionEnd   string `json:"auctionEnd"`
 }
 
+type UpdateAuctionDTO struct {
+	Make    string `json:"make,omitempty"`
+	Model   string `json:"model,omitempty"`
+	Color   string `json:"color,omitempty"`
+	Mileage int    `json:"mileage,omitempty"`
+	Year    int    `json:"year,omitempty"`
+}
+
 func ToAuctionDTO(auction *models.Auction) AuctionDTO {
 	auctionDTO := AuctionDTO{
 		ID:             auction.ID,

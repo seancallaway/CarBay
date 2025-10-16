@@ -56,7 +56,7 @@ func CreateAuction(ctx *gin.Context) {
 	var data dtos.CreateAuctionDTO
 
 	if err := ctx.BindJSON(&data); err != nil {
-		slog.Error(err.Error())
+		slog.Warn(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Body"})
 		return
 	}
@@ -94,4 +94,58 @@ func CreateAuction(ctx *gin.Context) {
 	slog.Debug("Auction created.", "user", seller, "auctionId", auction.ID.String())
 	auctionDTO := dtos.ToAuctionDTO(&auction)
 	ctx.JSON(http.StatusCreated, gin.H{"data": auctionDTO})
+}
+
+func UpdateAuction(ctx *gin.Context) {
+	rawId := ctx.Param("id")
+	id, err := uuid.Parse(rawId)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "Invalid UUID"})
+		return
+	}
+
+	var auction models.Auction
+	result := inits.DB.Preload("Item").First(&auction, id)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": "Not Found"})
+		} else {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Bad Request", "details": err.Error()})
+		}
+	} else {
+		// TODO: Check seller == user
+		user := "test"
+
+		var data dtos.UpdateAuctionDTO
+		if err := ctx.BindJSON(&data); err != nil {
+			slog.Warn(err.Error())
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Body"})
+			return
+		}
+		if data.Make != "" {
+			auction.Item.Make = data.Make
+		}
+		if data.Model != "" {
+			auction.Item.Color = data.Color
+		}
+		if data.Mileage != 0 {
+			auction.Item.Mileage = data.Mileage
+		}
+		if data.Color != "" {
+			auction.Item.Color = data.Color
+		}
+		if data.Year != 0 {
+			auction.Item.Year = data.Year
+		}
+
+		result := inits.DB.Save(&auction)
+		if result.Error != nil {
+			// TODO: Dig into the error types and do some better error handling.
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Unable To Create Auction", "details": result.Error.Error()})
+			return
+		}
+		slog.Debug("Auction created.", "user", user, "auctionId", auction.ID.String())
+		auctionDTO := dtos.ToAuctionDTO(&auction)
+		ctx.JSON(http.StatusOK, gin.H{"data": auctionDTO})
+	}
 }
