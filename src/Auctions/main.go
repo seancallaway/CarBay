@@ -29,6 +29,7 @@ func main() {
 	r.POST("/api/auctions", controllers.CreateAuction)
 	r.GET("/api/auctions/:id", controllers.GetAuctionById)
 	r.PUT("/api/auctions/:id", controllers.UpdateAuction)
+	r.DELETE("/api/auctions/:id", controllers.DeleteAuction)
 
 	r.Run()
 }
