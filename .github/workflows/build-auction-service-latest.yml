@@ -8,9 +8,14 @@ on:
     paths:
       - 'src/Auctions/*'
 
+
+
 jobs:
   build:
     runs-on: ubuntu-24.04-arm
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
