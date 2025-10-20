@@ -2,12 +2,10 @@ package models
 
 import (
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type Item struct {
-	ID             uuid.UUID `bson:"_id" json:"id"`
+	ID             string    `bson:"_id,omitempty" json:"id"`
 	CreatedAt      time.Time `json:"createdAt"`
 	UpdatedAt      time.Time `json:"updatedAt"`
 	AuctionEnd     time.Time `json:"auctionEnd"`
