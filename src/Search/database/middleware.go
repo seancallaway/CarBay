@@ -5,7 +5,7 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
-func MongoDBMiddleware(db *mongo.Client) gin.HandlerFunc {
+func MongoDBMiddleware(db *mongo.Database) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		ctx.Set("DB", db)
 		ctx.Next()

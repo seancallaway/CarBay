@@ -7,6 +7,7 @@ import (
 
 	"github.com/seancallaway/CarBay/search/database"
 	"github.com/seancallaway/CarBay/search/internal/utils"
+	"github.com/seancallaway/CarBay/search/models"
 )
 
 func main() {
@@ -15,7 +16,8 @@ func main() {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
-	DB := database.ConnectDB()
+	DB := database.ConnectDB().Database("SearchDB")
+	models.CreateItemIndexes(DB)
 
 	r := gin.Default()
 	r.Use(database.MongoDBMiddleware(DB))
