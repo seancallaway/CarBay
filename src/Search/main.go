@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/seancallaway/CarBay/search/controllers"
 	"github.com/seancallaway/CarBay/search/database"
 	"github.com/seancallaway/CarBay/search/internal/utils"
 	"github.com/seancallaway/CarBay/search/models"
@@ -25,6 +26,8 @@ func main() {
 
 	r := gin.Default()
 	r.Use(database.MongoDBMiddleware(DB))
+
+	r.GET("api/search", controllers.Search)
 
 	r.Run()
 }
