@@ -18,6 +18,10 @@ func main() {
 
 	DB := database.ConnectDB().Database("SearchDB")
 	models.CreateItemIndexes(DB)
+	err := models.InitDb(DB)
+	if err != nil {
+		slog.Error("Error seeding DB: " + err.Error())
+	}
 
 	r := gin.Default()
 	r.Use(database.MongoDBMiddleware(DB))
