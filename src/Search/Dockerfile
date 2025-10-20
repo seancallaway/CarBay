@@ -20,6 +20,7 @@ RUN apk add --no-cache ca-certificates tzdata
 RUN addgroup -S appuser \
  && adduser -S -G appuser -H -s /sbin/nologin appuser
 
+COPY data/auctions.json /app/data/auctions.json
 COPY --from=builder --chown=appuser:appuser /app/search /app/search
 
 USER appuser
