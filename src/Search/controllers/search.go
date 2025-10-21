@@ -21,14 +21,13 @@ func Search(ctx *gin.Context) {
 		return
 	}
 
-	queryStr := ctx.Query("query")
+	queryStr := ctx.Query("searchTerm")
 	var filter bson.D
 	if queryStr == "" {
 		// No query provided
 		filter = bson.D{}
 	} else {
-		// TODO: Implement filtering
-		filter = bson.D{}
+		filter = bson.D{{Key: "$text", Value: bson.D{{Key: "$search", Value: queryStr}}}}
 	}
 	pageNumber, err := strconv.Atoi(ctx.DefaultQuery("pageNumber", "1"))
 	if err != nil {
