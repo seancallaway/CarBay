@@ -9,19 +9,15 @@ import (
 )
 
 func CreateItemIndexes(db *mongo.Database) {
-	indexes := []mongo.IndexModel{
-		{
-			Keys: bson.D{{Key: "make", Value: 1}},
-		},
-		{
-			Keys: bson.D{{Key: "model", Value: 1}},
-		},
-		{
-			Keys: bson.D{{Key: "color", Value: 1}},
+	index := mongo.IndexModel{
+		Keys: bson.D{
+			{Key: "make", Value: "text"},
+			{Key: "model", Value: "text"},
+			{Key: "color", Value: "text"},
 		},
 	}
 
-	_, err := db.Collection("items").Indexes().CreateMany(context.Background(), indexes)
+	_, err := db.Collection("items").Indexes().CreateOne(context.Background(), index)
 	if err != nil {
 		slog.Error("Unable to create indexes: " + err.Error())
 	} else {
