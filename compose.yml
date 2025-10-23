@@ -12,16 +12,34 @@ services:
       - POSTGRES_USER=auction
       - POSTGRES_DB=auction
 
+  mongo:
+    image: mongo:8.0
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=5A7phWFY9T2SnAo
+    volumes:
+      - mongo_data:/var/lib/mongodb/data
+
   auction:
     build: src/Auctions
     restart: unless-stopped
     ports:
-      - "127.0.0.1:7001:7001"
+      - "127.0.0.1:7001:8080"
     environment:
       - SQL_PASSWORD=b3pFUXqvMMx2JS8qLdrt
-      - PORT=7001
       - DEBUG=1
     
+  search:
+    build: src/Search
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:7002:8080"
+    environment:
+      - MONGO_PASSWORD=5A7phWFY9T2SnAo
+      - DEBUG=1  
 
 volumes:
   psql_data:
+  mongo_data:
